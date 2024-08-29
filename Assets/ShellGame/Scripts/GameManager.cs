@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.XR.CoreUtils;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -33,29 +31,24 @@ public class GameManager : MonoBehaviour
 
     public EyeTracking eyeTracking;
 
-    public XRRayInteractor rayInteractor;  
-    public InputActionProperty triggerAction;  
-
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(PlayGame());
-        rayInteractor.enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Check if the trigger button was pressed this frame
-        if (triggerAction.action.WasPressedThisFrame() && !playing)
-        {
-            // Check if the raycast from the rayInteractor hit the correct or incorrect crate
-            if (rayInteractor.TryGetCurrent3DRaycastHit(out RaycastHit hit))
-            {
+        //After the movement is finished detect mouse clicks and reveal if correct crate was selected
+        if (Input.GetMouseButtonDown(0) && !playing){
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit)){
                 if (hit.collider.CompareTag("Correct")){
-                    hit.collider.transform.GetChild(0).gameObject.GetComponent<Renderer>().material = correctMat;
+                    crates[0].GetComponent<Renderer>().material = correctMat;
                 } else if (hit.collider.CompareTag("Incorrect")){
-                    hit.collider.transform.GetChild(0).gameObject.GetComponent<Renderer>().material = incorrectMat;
+                    hit.collider.GetComponent<Renderer>().material = incorrectMat;
                 }
             }
         }
@@ -189,7 +182,6 @@ public class GameManager : MonoBehaviour
         eyeTracking.pushSample("End of Movement");
         
         playing = false;
-        rayInteractor.enabled = true;
     }
 
     //Movement functions
