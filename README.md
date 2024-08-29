@@ -1,0 +1,1 @@
+**I tried to add controller usage to select crates but it broke eye tracking and I couldn't fix it, it should be easy enough to just have the participant say which crate they think is correct and record the data that way**
