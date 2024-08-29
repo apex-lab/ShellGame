@@ -15,10 +15,8 @@ def main():
         csvwriter = csv.writer(file)
         csvwriter.writerow(header)
 
-    timeout_duration = 5.0  # Set timeout duration to 5 seconds
     while True:
-        # get a new sample with timeout (e.g., 5 seconds)
-        sample, timestamp = inlet.pull_sample(timeout=timeout_duration)
+        sample, timestamp = inlet.pull_sample()
 
         if sample is None:
             # If no sample is received within the timeout, break the loop
